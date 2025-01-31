@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  nextjs-app:
+    build:
+      context: ./TIP-main  # Specify the subfolder where Next.js code is located
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    # restart: unless-stopped'
+    networks:
+      - my-network
+
+  rails-app:
+    build:
+      context: ./rubyrails
+      dockerfile: Dockerfile
+    container_name: rails-app
+    ports:
+      - "4000:4000"  # Expose Rails app on port 3000
+    volumes:
+      - "./rubyrails:/app"  # Mount the current directory to /app inside the container
+    environment:
+      - RAILS_ENV=development
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
